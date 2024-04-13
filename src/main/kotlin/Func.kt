@@ -4,7 +4,7 @@ object Func {
 
     //检查输入币种是否正确
     fun checkCurrency(currency: String): String {
-        return when (currency) {
+        return when (currency.uppercase()) {
             in Config.currencyAltName["USD"]!! -> {
                 "USD"
             }
@@ -21,16 +21,14 @@ object Func {
                 "JPY"
             }
 
-            else -> {
-                "USD"
-            }
+            else -> "ERR"
 
         }
     }
 
     //检查输入银行是否正确
     fun checkBank(bank: String): String {
-        return when (bank) {
+        return when (bank.uppercase()) {
             in Config.bankAltName["BOC"]!! -> {
                 "BOC"
             }
@@ -39,9 +37,15 @@ object Func {
                 "ICBC"
             }
 
-            else -> {
-                "BOC"
+            in Config.bankAltName["CCB"]!! -> {
+                "CCB"
             }
+
+            in Config.bankAltName["CMB"]!! -> {
+                "CMB"
+            }
+
+            else -> "ERR"
         }
     }
 

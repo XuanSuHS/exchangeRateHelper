@@ -8,15 +8,31 @@ import net.mamoe.mirai.contact.nameCardOrNick
 class ExchangeRateCommand : SimpleCommand(
     owner = HelperMain,
     primaryName = "exchangerate",
-    secondaryNames = arrayOf("hl", "er"),
+    secondaryNames = arrayOf("hl", "er", "汇率"),
     description = "获取汇率信息"
 ) {
     @Handler
     suspend fun CommandSender.handle(currencyIn: String = "", bankIn: String = "") {
 
+
         val currency = Func.checkCurrency(currencyIn)
 
         val bank = Func.checkBank(bankIn)
+
+        var ifErrMessage = ""
+
+        if (currency == "ERR") {
+            ifErrMessage += "无法匹配${currencyIn}为已知币种\n"
+        }
+
+        if (bank == "ERR") {
+            ifErrMessage += "无法匹配${bankIn}为可用银行"
+        }
+
+        if (ifErrMessage.isNotEmpty()) {
+            sendMessage(ifErrMessage)
+            return
+        }
 
         val response = Web.getExchangeRate(bank)
 
@@ -32,12 +48,12 @@ class ExchangeRateCommand : SimpleCommand(
         for (i in exchangeRateArray) {
             if (i.jsonObject["code"]!!.jsonPrimitive.content == currency) {
                 sendMessage(
-                    "CNY - $currency 汇率\n"
+                    "${Config.bankShortNameCN[bank]}${i.jsonObject["name"]!!.jsonPrimitive.content}汇率\n"
                         .plus("时间：${responseObject["day"]!!.jsonPrimitive.content}\n")
-                        .plus("卖出价-汇：${i.jsonObject["hui_out"]!!.jsonPrimitive.content}\n")
-                        .plus("卖出价-钞：${i.jsonObject["chao_out"]!!.jsonPrimitive.content}\n")
-                        .plus("买入价-汇：${i.jsonObject["hui_in"]!!.jsonPrimitive.content}\n")
-                        .plus("买入价-钞：${i.jsonObject["chao_in"]!!.jsonPrimitive.content}\n")
+                        .plus("卖出 - 汇：${i.jsonObject["hui_out"]!!.jsonPrimitive.content}\n")
+                        .plus("卖出 - 钞：${i.jsonObject["chao_out"]!!.jsonPrimitive.content}\n")
+                        .plus("买入 - 汇：${i.jsonObject["hui_in"]!!.jsonPrimitive.content}\n")
+                        .plus("买入 - 钞：${i.jsonObject["chao_in"]!!.jsonPrimitive.content}")
                 )
                 return
             } else continue

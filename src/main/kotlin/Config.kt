@@ -21,4 +21,11 @@ object Config : AutoSavePluginConfig("config") {
         "CCB" to listOf("CCB","建行","建设银行","中国建设银行"),
         "CMB" to listOf("CMB","招行","招商银行")
     ))
+
+    val bankShortNameCN: Map<String, String> by value(mapOf(
+        "BOC" to "中行",
+        "ICBC" to "工行",
+        "CCB" to "建行",
+        "CMB" to "招行"
+    ))
 }
