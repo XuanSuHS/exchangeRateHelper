@@ -44,10 +44,10 @@ class ExchangeRateCommand : SimpleCommand(
         val localFileStatus = getLocalFile(today, bank)
         if (localFileStatus.first) {
             logger.info("Check Local file Successful")
-            getLocalRate(localFileStatus.second,today, currency, bank)
+            getLocalRate(this, localFileStatus.second,today, currency, bank)
         } else {
             logger.info("Check Local file Failed")
-            getOnlineRate(localFileStatus.second,today, currency, bank)
+            getOnlineRate(this, localFileStatus.second,today, currency, bank)
         }
     }
 }
