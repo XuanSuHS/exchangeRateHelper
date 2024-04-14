@@ -32,7 +32,7 @@ class ExchangeRateCommand : SimpleCommand(
             }
 
         } catch (e: IllegalArgumentException) {
-            ifErrMessage += "无法匹配${currencyIn}为已知币种\n"
+            ifErrMessage += "无法匹配${currencyIn}为已知币种"
         }
 
         try {
@@ -43,7 +43,7 @@ class ExchangeRateCommand : SimpleCommand(
             }
 
         } catch (e: IllegalArgumentException) {
-            ifErrMessage += "无法匹配${bankIn}为可用银行"
+            ifErrMessage += "\n无法匹配${bankIn}为可用银行"
         }
 
         if (ifErrMessage.isNotEmpty()) {
