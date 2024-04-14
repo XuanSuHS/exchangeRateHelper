@@ -1,0 +1,3 @@
+top.xuansu.mirai.exchangeRateHelper.commands.DevCommand
+top.xuansu.mirai.exchangeRateHelper.commands.ExchangeRateCommand
+top.xuansu.mirai.exchangeRateHelper.commands.TestCommand

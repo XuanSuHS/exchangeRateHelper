@@ -1,7 +1,8 @@
 package top.xuansu.mirai.exchangeRateHelper
 
-import net.mamoe.mirai.console.command.CommandManager
+import net.mamoe.mirai.console.command.Command
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.unregister
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.plugin.jvm.reloadPluginConfig
@@ -17,27 +18,22 @@ object HelperMain : KotlinPlugin(
         author("XuanSu")
     }
 ) {
+    private val commands: List<Command> by services()
 
     override fun onEnable() {
-        //----------------------
         //初始化命令
-        ExchangeRateCommand().register()
-        DevCommand().register()
-        //----------------------
+        commands.forEach { it.register() }
 
 
         //初始化Config
         reloadPluginConfig(Config)
         reloadPluginData(Data)
 
-        //初始化下载图片
-        onStart()
-
         logger.info { "Plugin loaded" }
     }
 
     override fun onDisable() {
-        CommandManager.INSTANCE.unregisterAllCommands(HelperMain)
+        for ( command in commands ) command.unregister()
         logger.info { "Plugin Unloaded" }
     }
 }
