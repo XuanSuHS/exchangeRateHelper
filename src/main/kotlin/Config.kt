@@ -4,6 +4,9 @@ import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.value
 
 object Config : AutoSavePluginConfig("config") {
+    val defaultBank: String by value("BOC")
+    val defaultCurrency: String by value("USD")
+
     val currencyAltName: Map<String, List<String>> by value(mapOf(
         "USD" to listOf("USD", "US", "美元", "美国"),
         "EUR" to listOf("EUR", "EU", "欧元", "欧盟"),
