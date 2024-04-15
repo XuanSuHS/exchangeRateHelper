@@ -4,6 +4,8 @@ import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.value
 
 object Config : AutoSavePluginConfig("config") {
+    val preferLocalData: Boolean by value (false)
+    val autoFuzzyMatching: Boolean by value(false)
     val defaultBank: String by value("BOC")
     val defaultCurrency: String by value("USD")
 
@@ -36,10 +38,10 @@ object Config : AutoSavePluginConfig("config") {
         "ICBC" to "工行",
         "ABCHINA" to "农行",
         "BANKCOMM" to "交行",
-        "CEBBANK" to "光大",
-        "ECITIC" to "中信",
-        "CIB" to "兴业",
-        "SPDB" to "浦发",
+        "CEBBANK" to "光大银行",
+        "ECITIC" to "中信银行",
+        "CIB" to "兴业银行",
+        "SPDB" to "浦发银行",
         "CCB" to "建行",
         "CMBCHINA" to "招行"
     ))

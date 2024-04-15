@@ -13,7 +13,7 @@ class TestCommand : SimpleCommand(
     @Handler
     suspend fun CommandSender.handle(arg: String) {
 
-        val result = findKeyWithLongestCommonSubsequencePercentage(arg.uppercase(), Config.currencyAltName)
+        val result = findKeyWithLongestCommonSubsequencePercentage(arg.uppercase(), Config.bankAltName)
         sendMessage("最长匹配项为: $result")
     }
 }

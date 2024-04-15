@@ -20,9 +20,10 @@ class ExchangeRateCommand : SimpleCommand(
 
         val zoneId = ZoneId.of("Asia/Shanghai")
         val today = LocalDate.now(zoneId)
-        var ifErrMessage = ""
+        var findErrMessage = ""
         var currency = ""
         var bank = ""
+
 
         try {
             currency = if (currencyIn.isBlank()) {
@@ -32,7 +33,23 @@ class ExchangeRateCommand : SimpleCommand(
             }
 
         } catch (e: IllegalArgumentException) {
-            ifErrMessage += "无法匹配${currencyIn}为已知币种"
+            val commonSub =
+                findKeyWithLongestCommonSubsequencePercentage(currencyIn.uppercase(), Config.currencyAltName)
+
+            when {
+                commonSub.second >= 40 && Config.autoFuzzyMatching -> {
+                    currency = commonSub.first!!
+                }
+
+                commonSub.second >= 40 && !Config.autoFuzzyMatching -> {
+                    findErrMessage += "无法匹配${currencyIn}为已知币种"
+                    findErrMessage += "，您想找的是否为：${commonSub.first!!}"
+                }
+
+                else -> {
+                    findErrMessage += "无法匹配${currencyIn}为已知币种"
+                }
+            }
         }
 
         try {
@@ -43,22 +60,41 @@ class ExchangeRateCommand : SimpleCommand(
             }
 
         } catch (e: IllegalArgumentException) {
-            ifErrMessage += "\n无法匹配${bankIn}为可用银行"
+            val commonSub = findKeyWithLongestCommonSubsequencePercentage(bankIn.uppercase(), Config.bankAltName)
+
+            when {
+                commonSub.second >= 40 && Config.autoFuzzyMatching -> {
+                    bank = commonSub.first!!
+                }
+
+                commonSub.second >= 40 && !Config.autoFuzzyMatching -> {
+                    if (findErrMessage.isNotEmpty()) {
+                        findErrMessage += "\n"
+                    }
+                    findErrMessage += "无法匹配${bankIn}为可用银行"
+                    findErrMessage += "，您想找的是否为 ${Config.bankShortNameCN[commonSub.first!!]}：${commonSub.first!!}"
+                }
+
+                else -> {
+                    if (findErrMessage.isNotEmpty()) {
+                        findErrMessage += "\n"
+                    }
+                    findErrMessage += "无法匹配${bankIn}为可用银行"
+                }
+            }
         }
 
-        if (ifErrMessage.isNotEmpty()) {
-            sendMessage(ifErrMessage)
+        if (findErrMessage.isNotEmpty()) {
+            sendMessage(findErrMessage)
             return
         }
-        logger.info("${bank}-${currency}")
 
         val localFileStatus = getLocalFile(today, bank)
-        if (localFileStatus.first) {
+        if (Config.preferLocalData && localFileStatus.first) {
             logger.info("Check Local file Successful")
-            getLocalRate(this, localFileStatus.second,today, currency, bank)
+            getLocalRate(this, localFileStatus.second, today, currency, bank)
         } else {
-            logger.info("Check Local file Failed")
-            getOnlineRate(this, localFileStatus.second,today, currency, bank)
+            getOnlineRate(this, localFileStatus.second, today, currency, bank)
         }
     }
 }

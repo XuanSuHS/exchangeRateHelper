@@ -7,10 +7,5 @@ fun checkBank(bank: String): String {
         if (bank.uppercase() in i.value) return i.key
     }
 
-    val commonSub = findKeyWithLongestCommonSubsequencePercentage(bank.uppercase(), Config.bankAltName)
-    if ( commonSub.second >= 40 ) {
-        return commonSub.first!!
-    }
-
     throw IllegalArgumentException()
 }

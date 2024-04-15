@@ -8,11 +8,9 @@ fun longestCommonSubsequenceInOrder(a: String, b: String): Int {
     while (indexA < a.length && indexB < b.length) {
         if (a[indexA] == b[indexB]) {
             commonLength++
-            indexA++
-            indexB++
-        } else {
-            indexB++
         }
+        indexA++
+        indexB++
     }
 
     return commonLength

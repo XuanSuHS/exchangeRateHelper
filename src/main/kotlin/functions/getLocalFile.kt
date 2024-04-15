@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 fun getLocalFile(date: LocalDate, bank: String): Pair<Boolean, Path> {
 
-    val fileName = "${date}-${bank}.json"
+    val fileName = "${bank}-${date}"
 
     val exchangeRateJsonFolder = dataFolder.resolve("exchange_rates")
     if (!exchangeRateJsonFolder.exists()) { exchangeRateJsonFolder.mkdirs() }
