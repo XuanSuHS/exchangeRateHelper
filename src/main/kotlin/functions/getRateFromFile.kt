@@ -12,7 +12,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.time.LocalDate
 
-suspend fun getLocalRate(sender: CommandSender,filePath: Path,date: LocalDate, currency: String, bank: String) {
+suspend fun getRateFromFile(sender: CommandSender, filePath: Path, date: LocalDate, currency: String, bank: String) {
 
     val localFile = withContext(Dispatchers.IO) {
         Files.readString(filePath)

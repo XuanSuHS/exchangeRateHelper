@@ -20,6 +20,9 @@ object HelperMain : KotlinPlugin(
 ) {
     private val commands: List<Command> by services()
 
+    //初始化文件夹
+    val rateFolder = dataFolder.resolve("exchange_rates")
+
     override fun onEnable() {
         //初始化命令
         commands.forEach { it.register() }
@@ -29,11 +32,16 @@ object HelperMain : KotlinPlugin(
         reloadPluginConfig(Config)
         reloadPluginData(Data)
 
+        //开始定时刷新文件
+        HelperCoroutine.onStart()
+        HelperCoroutine.runScope()
+
         logger.info { "Plugin loaded" }
     }
 
     override fun onDisable() {
         for ( command in commands ) command.unregister()
+        HelperCoroutine.stopScope()
         logger.info { "Plugin Unloaded" }
     }
 }

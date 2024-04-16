@@ -5,6 +5,7 @@ import net.mamoe.mirai.console.command.SimpleCommand
 import top.xuansu.mirai.exchangeRateHelper.Config
 import top.xuansu.mirai.exchangeRateHelper.HelperMain
 import top.xuansu.mirai.exchangeRateHelper.HelperMain.logger
+import top.xuansu.mirai.exchangeRateHelper.HelperMain.rateFolder
 import top.xuansu.mirai.exchangeRateHelper.functions.*
 import java.time.LocalDate
 import java.time.ZoneId
@@ -24,6 +25,8 @@ class ExchangeRateCommand : SimpleCommand(
         var currency = ""
         var bank = ""
 
+        //TODO:自由指定汇率日期
+        val date = today
 
         try {
             currency = if (currencyIn.isBlank()) {
@@ -89,12 +92,19 @@ class ExchangeRateCommand : SimpleCommand(
             return
         }
 
-        val localFileStatus = getLocalFile(today, bank)
-        if (Config.preferLocalData && localFileStatus.first) {
-            logger.info("Check Local file Successful")
-            getLocalRate(this, localFileStatus.second, today, currency, bank)
+        val rateFile = rateFolder.resolve("${bank}-${date}.json")
+
+        val localFileStatus = checkLocalFile(rateFile)
+        if (localFileStatus.first && Config.preferLocalData) {
+            logger.info("Local file exists, using it.")
         } else {
-            getOnlineRate(this, localFileStatus.second, today, currency, bank)
+            try {
+                downloadRateDataToFile(rateFile, bank)
+            } catch (e: Exception) {
+                sendMessage("出错了：${e}")
+                return
+            }
         }
+        getRateFromFile(this, localFileStatus.second, date, currency, bank)
     }
 }
