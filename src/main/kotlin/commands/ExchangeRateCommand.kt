@@ -6,6 +6,7 @@ import top.xuansu.mirai.exchangeRateHelper.Config
 import top.xuansu.mirai.exchangeRateHelper.HelperMain
 import top.xuansu.mirai.exchangeRateHelper.HelperMain.logger
 import top.xuansu.mirai.exchangeRateHelper.HelperMain.rateFolder
+import top.xuansu.mirai.exchangeRateHelper.DataHolder
 import top.xuansu.mirai.exchangeRateHelper.functions.*
 import java.time.LocalDate
 import java.time.ZoneId
@@ -37,7 +38,7 @@ class ExchangeRateCommand : SimpleCommand(
 
         } catch (e: IllegalArgumentException) {
             val commonSub =
-                findKeyWithLongestCommonSubsequencePercentage(currencyIn.uppercase(), Config.currencyAltName)
+                findKeyWithLongestCommonSubsequencePercentage(currencyIn.uppercase(), DataHolder.currencyAltName)
 
             when {
                 commonSub.second >= 40 && Config.autoFuzzyMatching -> {
@@ -63,7 +64,7 @@ class ExchangeRateCommand : SimpleCommand(
             }
 
         } catch (e: IllegalArgumentException) {
-            val commonSub = findKeyWithLongestCommonSubsequencePercentage(bankIn.uppercase(), Config.bankAltName)
+            val commonSub = findKeyWithLongestCommonSubsequencePercentage(bankIn.uppercase(), DataHolder.bankAltName)
 
             when {
                 commonSub.second >= 40 && Config.autoFuzzyMatching -> {
@@ -75,7 +76,7 @@ class ExchangeRateCommand : SimpleCommand(
                         findErrMessage += "\n"
                     }
                     findErrMessage += "无法匹配${bankIn}为可用银行"
-                    findErrMessage += "，您想找的是否为 ${Config.bankShortNameCN[commonSub.first!!]}：${commonSub.first!!}"
+                    findErrMessage += "，您想找的是否为 ${DataHolder.bankShortNameCN[commonSub.first!!]}：${commonSub.first!!}"
                 }
 
                 else -> {

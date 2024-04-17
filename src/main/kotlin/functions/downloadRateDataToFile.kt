@@ -47,7 +47,6 @@ suspend fun downloadRateDataToFile(rateFile: File, bank: String) {
 
     val responseObject = Json.parseToJsonElement(response).jsonObject["showapi_res_body"]!!.jsonObject
 
-    //TODO:设置每天上午11点为分界线
     //网站找不到
     if (responseObject["ret_code"]!!.jsonPrimitive.content != "0") {
         throw IOException(responseObject["remark"]!!.jsonPrimitive.content)

@@ -7,7 +7,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import net.mamoe.mirai.console.command.CommandSender
-import top.xuansu.mirai.exchangeRateHelper.Config
+import top.xuansu.mirai.exchangeRateHelper.DataHolder
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.LocalDate
@@ -22,7 +22,7 @@ suspend fun getRateFromFile(sender: CommandSender, filePath: Path, date: LocalDa
     for (i in exchangeRateArrayFromFile) {
         if (i.jsonObject["code"]!!.jsonPrimitive.content == currency) {
             sender.sendMessage(
-                "${Config.bankShortNameCN[bank]}${i.jsonObject["name"]!!.jsonPrimitive.content}汇率\n"
+                "${DataHolder.bankShortNameCN[bank]}${i.jsonObject["name"]!!.jsonPrimitive.content}汇率\n"
                     .plus("时间：${date}\n")
                     .plus("卖出 - 汇：${i.jsonObject["hui_out"]!!.jsonPrimitive.content}\n")
                     .plus("卖出 - 钞：${i.jsonObject["chao_out"]!!.jsonPrimitive.content}\n")
@@ -32,5 +32,5 @@ suspend fun getRateFromFile(sender: CommandSender, filePath: Path, date: LocalDa
             return
         } else continue
     }
-    sender.sendMessage("${Config.bankShortNameCN[bank]}无法兑换此货币")
+    sender.sendMessage("${DataHolder.bankShortNameCN[bank]}无法兑换此货币")
 }
