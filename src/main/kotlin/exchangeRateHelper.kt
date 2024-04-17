@@ -13,7 +13,7 @@ object HelperMain : KotlinPlugin(
     JvmPluginDescription(
         id = "top.xuansu.mirai.exchangeRateHelper",
         name = "ExchangeRateHelper",
-        version = "0.0.4",
+        version = "0.0.5",
     ) {
         author("XuanSu")
     }

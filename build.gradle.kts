@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "top.xuansu.mirai.exchangeRateHelper"
-version = "0.0.4"
+version = "0.0.5"
 
 repositories {
     //maven("https://maven.aliyun.com/repository/public")
