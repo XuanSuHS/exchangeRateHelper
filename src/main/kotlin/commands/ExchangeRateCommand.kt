@@ -3,10 +3,10 @@ package top.xuansu.mirai.exchangeRateHelper.commands
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import top.xuansu.mirai.exchangeRateHelper.Config
+import top.xuansu.mirai.exchangeRateHelper.DataHolder
 import top.xuansu.mirai.exchangeRateHelper.HelperMain
 import top.xuansu.mirai.exchangeRateHelper.HelperMain.logger
 import top.xuansu.mirai.exchangeRateHelper.HelperMain.rateFolder
-import top.xuansu.mirai.exchangeRateHelper.DataHolder
 import top.xuansu.mirai.exchangeRateHelper.functions.*
 import java.time.LocalDate
 import java.time.ZoneId
@@ -18,7 +18,7 @@ class ExchangeRateCommand : SimpleCommand(
     description = "获取汇率信息"
 ) {
     @Handler
-    suspend fun CommandSender.handle(currencyIn: String = "", bankIn: String = "") {
+    suspend fun CommandSender.handle(currencyIn: String = "", bankIn: String = "", refreshNow: String = "") {
 
         val zoneId = ZoneId.of("Asia/Shanghai")
         val today = LocalDate.now(zoneId)
@@ -96,16 +96,18 @@ class ExchangeRateCommand : SimpleCommand(
         val rateFile = rateFolder.resolve("${bank}-${date}.json")
 
         val localFileStatus = checkLocalFile(rateFile)
-        if (localFileStatus.first && Config.preferLocalData) {
-            logger.info("Local file exists, using it.")
-        } else {
+
+        if (!localFileStatus.first || refreshNow.lowercase() in listOf("yes", "y") || !Config.preferLocalData) {
             try {
                 downloadRateDataToFile(rateFile, bank)
             } catch (e: Exception) {
                 sendMessage("出错了：${e}")
                 return
             }
+        } else {
+            logger.info("Local file exists, using it.")
         }
+
         getRateFromFile(this, localFileStatus.second, date, currency, bank)
     }
 }
