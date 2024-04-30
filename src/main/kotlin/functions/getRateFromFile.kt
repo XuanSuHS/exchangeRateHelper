@@ -17,13 +17,15 @@ suspend fun getRateFromFile(sender: CommandSender, filePath: Path, date: LocalDa
     val localFile = withContext(Dispatchers.IO) {
         Files.readString(filePath)
     }
-    val exchangeRateArrayFromFile = Json.parseToJsonElement(localFile).jsonArray
+    val exchangeRateJson = Json.parseToJsonElement(localFile).jsonObject
+    val exchangeRateTime = exchangeRateJson["time"]!!.jsonPrimitive.content
+    val exchangeRateArray = exchangeRateJson["codeList"]!!.jsonArray
 
-    for (i in exchangeRateArrayFromFile) {
+    for (i in exchangeRateArray) {
         if (i.jsonObject["code"]!!.jsonPrimitive.content == currency) {
             sender.sendMessage(
                 "${DataHolder.bankShortNameCN[bank]}${i.jsonObject["name"]!!.jsonPrimitive.content}汇率\n"
-                    .plus("时间：${date}\n")
+                    .plus("时间：${date} ${exchangeRateTime}\n")
                     .plus("卖出 - 汇：${i.jsonObject["hui_out"]!!.jsonPrimitive.content}\n")
                     .plus("卖出 - 钞：${i.jsonObject["chao_out"]!!.jsonPrimitive.content}\n")
                     .plus("买入 - 汇：${i.jsonObject["hui_in"]!!.jsonPrimitive.content}\n")

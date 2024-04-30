@@ -2,10 +2,7 @@ package top.xuansu.mirai.exchangeRateHelper.functions
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.*
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -52,7 +49,12 @@ suspend fun downloadRateDataToFile(rateFile: File, bank: String) {
         throw IOException(responseObject["remark"]!!.jsonPrimitive.content)
     }
 
+    val exchangeRateTime = responseObject["time"]!!.jsonPrimitive.content
     val exchangeRateArray = responseObject["codeList"]!!.jsonArray
+    val exchangeRateJson = buildJsonObject {
+        put("time", exchangeRateTime)
+        put("codeList", exchangeRateArray)
+    }
 
     //检查文件夹是否存在
     if (!rateFolder.exists()) {
@@ -64,7 +66,7 @@ suspend fun downloadRateDataToFile(rateFile: File, bank: String) {
     withContext(Dispatchers.IO) {
         Files.deleteIfExists(localExchangeRateFile)
         Files.writeString(
-            localExchangeRateFile, exchangeRateArray.toString(), StandardCharsets.UTF_8,
+            localExchangeRateFile, exchangeRateJson.toString(), StandardCharsets.UTF_8,
             StandardOpenOption.CREATE, StandardOpenOption.WRITE
         )
     }
