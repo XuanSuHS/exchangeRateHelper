@@ -26,10 +26,10 @@ suspend fun getRateFromFile(sender: CommandSender, filePath: Path, date: LocalDa
             sender.sendMessage(
                 "${DataHolder.bankShortNameCN[bank]}${i.jsonObject["name"]!!.jsonPrimitive.content}汇率\n"
                     .plus("时间：${date} ${exchangeRateTime}\n")
-                    .plus("卖出 - 汇：${i.jsonObject["hui_out"]!!.jsonPrimitive.content}\n")
-                    .plus("卖出 - 钞：${i.jsonObject["chao_out"]!!.jsonPrimitive.content}\n")
-                    .plus("买入 - 汇：${i.jsonObject["hui_in"]!!.jsonPrimitive.content}\n")
-                    .plus("买入 - 钞：${i.jsonObject["chao_in"]!!.jsonPrimitive.content}")
+                    .plus("汇 - 买入：${i.jsonObject["hui_in"]!!.jsonPrimitive.content}\n")
+                    .plus("汇 - 卖出：${i.jsonObject["hui_out"]!!.jsonPrimitive.content}\n")
+                    .plus("钞 - 买入：${i.jsonObject["chao_in"]!!.jsonPrimitive.content}\n")
+                    .plus("钞 - 卖出：${i.jsonObject["chao_out"]!!.jsonPrimitive.content}")
             )
             return
         } else continue
